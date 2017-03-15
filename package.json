@@ -1,0 +1,14 @@
+{
+  "name": "Projects",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node HelloWorld"
+  },
+  "dependencies": {
+    "mongoose": "~4.8.1",
+    "json-2-csv": "~2.1.0",
+    "node-schedule": "~1.2.1"
+
+  }
+}
