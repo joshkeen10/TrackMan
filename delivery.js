@@ -1,8 +1,9 @@
+//Include packages & models.
 var Deliveredgames = require('./models/deliveredgames.js'),
     fs = require('fs'),
     converter = require('json-2-csv');
 
-//options
+//Include options.
 var options = {
       delimiter : {
       wrap  : '"', // Double Quote (") character
@@ -12,18 +13,13 @@ var options = {
       }
   };
 
+//Function to generate CSV for delivered games.
+var deliveredQuery = function(yesterday, filename){
 
-var deliveredQuery = function(){
-
-  var date = new Date(),
-      yesterday = new Date() - 1000 * 3600 * 24,
-      year = (date.getFullYear()).toString(),
-      month = (date.getMonth() + 1).toString(),
-      month = month.length > 1 ? month : '0' + month,
-      day = (date.getDate()).toString(),
-      day = day.length > 1 ? day : '0' + day,
-      filename = year + month + day;
-
+  //Call variables.
+  yesterday;
+  filename;
+  console.log(yesterday);
   //Callback function to write delivered games data to a CSV.
   var DeliveredCallback = function (err, csv) {
       if (err) throw err;
@@ -37,7 +33,7 @@ var deliveredQuery = function(){
   //Query to get delivered games from the past day.
   Deliveredgames.aggregate(
     [
-    {$match: {"Time": {$gte : yesterday}}},
+    {$match: {"Time": {$gte : new Date('2017-01-01')}}},
   	{$group: {_id: "$GameId", Deliveries: {$sum: 1}, GameReference: {$addToSet: "$GameReference"},
      Time: {$first: "$Time"}}},
   	{$unwind: "$GameReference"},
@@ -58,9 +54,11 @@ var deliveredQuery = function(){
       if(err) {throw err;}
       else{
         converter.json2csv(deliver, DeliveredCallback, options);
+        console.log(deliver);
       };
     }
   )
 };
 
+//Export function.
 module.exports = deliveredQuery
