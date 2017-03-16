@@ -6,10 +6,10 @@ var game = require('./models/game.js'),
 //Include options.
 var options = {
       delimiter : {
-      wrap  : '"', // Double Quote (") character
+      wrap  : '', // Double Quote (") character
       field : ',', // Comma field delimiter
       array : ';', // Semicolon array value delimiter
-      eol   : '\n' // Newline delimiter
+      eol   : '\r\n' // Newline delimiter
       }
   };
 
@@ -33,7 +33,7 @@ var trackedQuery = function (yesterday, filename){
   //Query to get tracked games from the past day.
   game.aggregate(
     [
-      {$match: {"DateCreated" : {$gte: yesterday}}},
+      {$match: {"DateCreated" : {$gte: new Date(yesterday)}}},
       {$project: {Date: {$dateToString: {format: "%Y-%m-%d", date: "$DateCreated"}},
       HomeTeam: "$Info.Teams.Home.ShortName", AwayTeam: "$Info.Teams.Away.ShortName",
       GameReference: true, _id: true}}
@@ -41,7 +41,6 @@ var trackedQuery = function (yesterday, filename){
       if(err) {throw err;}
       else{
         converter.json2csv(track, TrackedCallback, options);
-        console.log(track);
       };
     }
   )

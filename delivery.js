@@ -6,10 +6,10 @@ var Deliveredgames = require('./models/deliveredgames.js'),
 //Include options.
 var options = {
       delimiter : {
-      wrap  : '"', // Double Quote (") character
+      wrap  : '', // Double Quote (") character
       field : ',', // Comma field delimiter
       array : ';', // Semicolon array value delimiter
-      eol   : '\n' // Newline delimiter
+      eol   : '\r\n' // Newline delimiter
       }
   };
 
@@ -19,7 +19,7 @@ var deliveredQuery = function(yesterday, filename){
   //Call variables.
   yesterday;
   filename;
-  console.log(yesterday);
+
   //Callback function to write delivered games data to a CSV.
   var DeliveredCallback = function (err, csv) {
       if (err) throw err;
@@ -33,7 +33,7 @@ var deliveredQuery = function(yesterday, filename){
   //Query to get delivered games from the past day.
   Deliveredgames.aggregate(
     [
-    {$match: {"Time": {$gte : new Date('2017-01-01')}}},
+    {$match: {"Time": {$gte: new Date(yesterday)}}},
   	{$group: {_id: "$GameId", Deliveries: {$sum: 1}, GameReference: {$addToSet: "$GameReference"},
      Time: {$first: "$Time"}}},
   	{$unwind: "$GameReference"},
@@ -54,7 +54,6 @@ var deliveredQuery = function(yesterday, filename){
       if(err) {throw err;}
       else{
         converter.json2csv(deliver, DeliveredCallback, options);
-        console.log(deliver);
       };
     }
   )
