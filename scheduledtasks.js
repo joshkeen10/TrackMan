@@ -9,15 +9,15 @@ var counter = 0,
     taskSchedule = new schedule.RecurrenceRule();
 
 //Schedule task to run once a day at 6 am.
-taskSchedule.hour = 17;
-taskSchedule.minute = 13;
+taskSchedule.hour = 6;
+taskSchedule.minute = 0;
 
 // Connect to mongoDB //
 var db_local = 'mongodb://localhost/baseball2';
-var db_pro = 'mongodb://tmbb-prof-1.trackman-baseballa.8282.mongodbdns.com:27001/baseball2/?readPreference=primary';
+var db_pro = //connection string
 mongoose.connect(db_pro, function(err){
   if(err)throw err
-  else {console.log("Connection to db_pro!")}
+  else {console.log("Connection to DB!")}
 });
 
 //Tasks to run.
